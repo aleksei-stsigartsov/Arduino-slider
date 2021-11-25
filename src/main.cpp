@@ -20,6 +20,18 @@
 // bruh pul5t
 #define RECEIVER_PIN 47 // define the IR receiver pin
 
+// datchiki levii
+#define trigPinL 43
+#define echoPinL 45
+/*long durationL;
+int distanceL;*/
+
+// datchiki pravii
+#define trigPinR 39
+#define echoPinR 41
+/*long durationR;
+int distanceR;*/
+
 // Create a new instance of the MD_Parola class with hardware SPI connection:
 MD_Parola myDisplay = MD_Parola(HARDWARE_TYPE, CS_PIN, MAX_DEVICES);
 
@@ -46,17 +58,6 @@ IRrecv receiver(RECEIVER_PIN); // create a receiver object of the IRrecv class
 decode_results results; // create a results object of the decode_results class
 unsigned long key_value = 0; // variable to store the pressed key value
 
-// datchiki levii
-#define trigPinL = 43;
-#define echoPinL = 45;
-/*long durationL;
-int distanceL;*/
-
-// datchiki pravii
-#define trigPinR = 39;
-#define echoPinR = 41;
-/*long durationR;
-int distanceR;*/
 
 void setup() {
   // put your setup code here, to run once:
@@ -76,8 +77,6 @@ void setup() {
   receiver.enableIRIn(); // enable the receiver
   receiver.blink13(true); // enable blinking of the built-in LED when an IR signal is received
 }
-
-#define RECEIVER_PIN 47 // define the IR receiver pin
 
 double getDistance(int echoPin, int triggerPin){
   double duration;
