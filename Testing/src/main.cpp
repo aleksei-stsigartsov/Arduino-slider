@@ -1,3 +1,5 @@
+///////////////////////////////CONNECT SECTION/////////////////////////////
+
 #include <Wire.h> // apparently the most important shit idk arduino too yeah
 #include <Arduino.h>// Include the Arduino Stepper Library
 #include <Stepper.h> // stepper motor
@@ -5,19 +7,19 @@
 #include <LedControl.h> //maxon
 #include <LiquidCrystal_I2C.h> //lcd
 
-// Number of steps per output rotation
-const int stepsPerRevolution = 200;
-// Create Instance of Stepper library
+
+
 
 /////////////////////MAXON SECTION//////////////////////
-int DIN = 12;
-int CS = 11;
-int LCLK = 10;
+
+int DIN = 10;
+int CS = 9;
+int LCLK = 8;
 byte center[8] = {0xE7, 0x99, 0xA5, 0x5A, 0x5A, 0xA5, 0x99, 0xE7};
 byte rightArrow[8] = {0x08, 0x0C, 0xFE, 0xFF, 0xFF, 0xFE, 0x0C, 0x08};
 byte leftArrow[8] = {0x10, 0x30, 0x7F, 0xFF, 0xFF, 0x7F, 0x30, 0x10};
 byte smile[8] = {0x3C, 0x42, 0xA5, 0x81, 0xA5, 0x99, 0x42, 0x3C};
-LedControl lc = LedControl(DIN, LCLK, CS, 0);
+LedControl lc = LedControl(DIN, LCLK, CS, 1);
 void printByte(byte character[])
 {
   int i = 0;
@@ -26,37 +28,44 @@ void printByte(byte character[])
     lc.setRow(0, i, character[i]);
   }
 }
+
+
 //////////////////LCD I2C SECTION////////////////////
+
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 void movementCenter()
 {
   lcd.setCursor(1, 0);
   lcd.print("Movement to");
-  lcd.setCursor(8, 1);
+  lcd.setCursor(1, 1);
   lcd.print("the center");
 }
 void movementLeft()
 {
   lcd.setCursor(1, 0);
   lcd.print("Movement to");
-  lcd.setCursor(8, 1);   
+  lcd.setCursor(1, 1);   
   lcd.print("the left");
 }
 void movementRight()
 {
   lcd.setCursor(1, 0);
   lcd.print("Movement to");
-  lcd.setCursor(8, 1);
+  lcd.setCursor(1, 1);
   lcd.print("the right");
 }
 void movementCenterDone()
 {
   lcd.setCursor(1, 0);
   lcd.print("SUCCESS");
-  lcd.setCursor(8, 1);
+  lcd.setCursor(1, 1);
   lcd.print("");
 }
 
+
+////////////////STEPPER SECTION////////////////////////
+
+const int stepsPerRevolution = 200; // number of steps per output rotation
 Stepper myStepper(stepsPerRevolution, 4, 5, 6, 7);
 
 #define S1 11
@@ -67,13 +76,22 @@ int curS1, curS2;
 
 int val = 0;
 
+
+
+//////////////////////////////////////GENERAL SECTION//////////////////////////////////////////////////
+
+
+
+
+
+/////////////////VOID SETUP////////////////////////
 void setup()
 {
   lcd.init();
   lcd.backlight();
-  lc.shutdown(0, false);  //the maxon is in power-saving mode on startup
+  /*lc.shutdown(0, false);  //the maxon is in power-saving mode on startup
   lc.setIntensity(0, 15); //set the brightness of maxon to maximum value
-  lc.clearDisplay(0);     //and clear the display
+  lc.clearDisplay(0);     //and clear the display*/
 	// set the speed at 60 rpm:
 	myStepper.setSpeed(60);
 	// initialize the serial port:
@@ -83,6 +101,9 @@ void setup()
 
   prevS1 = digitalRead(S1);
 }
+
+
+//////////////////////////VOID LOOP/////////////////////////////
 
 void loop()
 {
@@ -128,6 +149,9 @@ void loop()
   // init displays
   lcd.print(millis() / 1000); 
   lcd.display();
+  lc.shutdown(0, false);  //the maxon is in power-saving mode on startup
+  lc.setIntensity(0, 15); //set the brightness of maxon to maximum value
+  lc.clearDisplay(0);     //and clear the display
   
   // movement to the center 
   movementCenter();
@@ -135,14 +159,14 @@ void loop()
   delay(1500);
 
 	// step one revolution in one direction:
-  movementRight();
-  printByte(rightArrow);
+  movementLeft();
+  printByte(leftArrow);
 	myStepper.step(stepsPerRevolution);
 	delay(1500);
 
 	// step one revolution in the other direction:
-  movementLeft();
-  printByte(leftArrow);
+  movementRight();
+  printByte(rightArrow);
 	myStepper.step(-stepsPerRevolution);
 	delay(1500);
 
@@ -153,7 +177,9 @@ void loop()
   printByte(smile);
   delay(1500);
 
-  // clear displays
-  lc.clearDisplay(0); 
-  lcd.noDisplay();
 }
+
+
+
+
+///////////////////////////////////////END GENERAL SECTION//////////////////////////////////////////////////////
