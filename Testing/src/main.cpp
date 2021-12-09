@@ -1,6 +1,6 @@
 ///////////////////////////////CONNECT SECTION/////////////////////////////
 
-#include <Wire.h> // apparently the most important shit idk arduino too yeah
+#include <Wire.h> // apparently the most important s̵̰̬͍̮͈͇̖̘͍̦̽̒̈́̄̑͆̈́ḫ̸̡̨̧̡̡̪͙̭͈͇̗̤͖͖̹̥̯̖̟̯͇̦̪̪̖͈͕̟̠̣̱̌͐̓͋̅͜͝ȉ̴̧̨̳̼̘̼͎̘̖͖̮̰̪͔̝̥͎̦̪̭͚͗̄̓̉͂̿̆̍̿̉̚̕͠ṯ̵̢̧̨̨̨͈̦̭̫̭̣̣̜̻̩̝͎̹̪̖̝̭̫̤̜̫̪͇͈̭̾̈͋̐̈́́̀̐̄̂̀̀̓͐͊́͛͂̊̽̐̈̋̇͐̅́̚͠͠ idk arduino too yeah boy!
 #include <Arduino.h>// Include the Arduino Stepper Library
 #include <Stepper.h> // stepper motor
 #include <Encoder.h> // encoder
@@ -67,13 +67,10 @@ void movementCenterDone()
 
 const int stepsPerRevolution = 200; // number of steps per output rotation
 Stepper myStepper(stepsPerRevolution, 4, 5, 6, 7);
-
 #define S1 11
 #define S2 12
-
 int prevS1;
 int curS1, curS2;
-
 int val = 0;
 
 
@@ -89,16 +86,13 @@ void setup()
 {
   lcd.init();
   lcd.backlight();
-  /*lc.shutdown(0, false);  //the maxon is in power-saving mode on startup
-  lc.setIntensity(0, 15); //set the brightness of maxon to maximum value
-  lc.clearDisplay(0);     //and clear the display*/
 	// set the speed at 60 rpm:
 	myStepper.setSpeed(60);
 	// initialize the serial port:
 	Serial.begin(9600);
 	pinMode (S1, INPUT);
   pinMode (S2, INPUT);
-
+  // digital read
   prevS1 = digitalRead(S1);
 }
 
@@ -107,7 +101,7 @@ void setup()
 
 void loop()
 {
-
+  // encoder code
   curS1 = digitalRead(S1);
 
   if (curS2!=curS1) {
@@ -147,28 +141,38 @@ void loop()
   prevS1=curS1;
 
   // init displays
-  lcd.print(millis() / 1000); 
+  //lcd.print(millis() / 1000); 
   lcd.display();
   lc.shutdown(0, false);  //the maxon is in power-saving mode on startup
   lc.setIntensity(0, 15); //set the brightness of maxon to maximum value
   lc.clearDisplay(0);     //and clear the display
   
+
+  ////////// M̶̨̛̦͈̣̤̱̥̥̖̻̝̱͕͕̩͓̬͙͉͔̔̀̔̊̋̑͊̏̏̎̄̍͒͌̂͑̓͝͝Â̵̡̖̭̤̹̻̘̊̄̈́̉́̂͗̃̈́̓̃̍̉͘̕͘͝Į̵̨̨̖̦̫͈̜̻͔͙̟̺̜͇̭̜̥͚̺̠̯͍̈̐̀Ņ̴̢̼̖̯̞̮̗̩̟̺̥̱͍̜̻̭͉̌̔͗̊́̉̀͝͝ ̴̨͈͇̝̱̟͓͇͙̠̠̮̯̫͔̫̭͓̩̖̹̅͑̽̎ͅÄ̶̧̧̧͇̠̠̫̞̻̮̯́̓͆̃͛̾̎̅́̅̈́͠C̴̡̡̥̣̰̘͖̬̘̞̘̣͕̱̦̼̖̹̳̈́́̿̀̈́͌̚T̸͉̔̍̎̽̈͂̒̔̆̾̒̈́͝Ï̸̘̘̘̰̮̘̻͕͍̼̞͇̳͕͗̈́͐͌̀̅͊̑͛͐̏̊͑̕̚͘͝Ȍ̷̧̢̡̠̤̙̮̰͙̹͚̫̗̦͇̱̀͛̿̕N̶̹̺͚͔̞̗̿̔̽͒̈́̋S̸̛̲̲̺̆͐͑̈́̈́̿̀͐͂̔̈́̔̉͘̕///////////
+
+
   // movement to the center 
   movementCenter();
   printByte(center);
   delay(1500);
+  lc.clearDisplay(0);
+  lcd.clear();
 
-	// step one revolution in one direction:
+	// step one revolution in one direction (clockwise):
   movementLeft();
   printByte(leftArrow);
 	myStepper.step(stepsPerRevolution);
 	delay(1500);
+  lc.clearDisplay(0);
+  lcd.clear();
 
-	// step one revolution in the other direction:
+	// step one revolution in the other direction (against the sun):
   movementRight();
   printByte(rightArrow);
 	myStepper.step(-stepsPerRevolution);
 	delay(1500);
+  lc.clearDisplay(0);
+  lcd.clear();
 
   // we are done 
   movementCenterDone();
@@ -176,9 +180,10 @@ void loop()
   delay(1500);
   printByte(smile);
   delay(1500);
+  lc.clearDisplay(0);
+  lcd.clear();
 
 }
-
 
 
 
